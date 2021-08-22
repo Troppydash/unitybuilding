@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class WalkingScript : MonoBehaviour
 {
+    // editor settings
     public float moveSpeed = 10f;
     public List<GameObject> places;
+    public GameObject linePrefab;
 
     private List<Vector3> positions;
     private int positionIndex;
@@ -21,6 +23,24 @@ public class WalkingScript : MonoBehaviour
         isReverse = -1;
         positionIndex = 0;
         positionIndex = NextPlace();
+
+        if ( linePrefab )
+        {
+            GenerateGuideLines();
+        }
+    }
+
+    private void GenerateGuideLines()
+    {
+        int count = positions.Count;
+        for ( int i = 0; i < count - 1; ++i )
+        {
+            GameObject guideLine = Instantiate( linePrefab );
+            guideLine.GetComponent<LineRenderer>().SetPositions( new []
+            {
+                positions[i] + Vector3.down, positions[i+1] + Vector3.down
+            } );
+        }
     }
 
     private int NextPlace()
